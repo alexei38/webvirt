@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Авторизация{% endblock %}
+{% block content %}
+
+  <div class="well form-signin">
+    <form method="post">{% csrf_token %}
+        <h2 class="form-signin-heading">Авторизация</h2>
+        <input type="text" class="input-block-level" name="username" placeholder="Login" autofocus>
+        <input type="password" class="input-block-level" name="password" placeholder="Password">
+        <!--label class="checkbox" for="user_remember_me">
+          <input id="user_remember_me" name="remember_me" value="1" type="checkbox"> Запомнить меня
+        </label-->
+        <button class="btn btn-large btn-primary" type="submit">{% trans "Sign In" %}</button>
+    </form>
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {% trans "Incorrect username or password." %}
+        </div>
+    {% endif %}
+  </div>
+{% endblock %}

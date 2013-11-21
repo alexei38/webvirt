@@ -1,0 +1,91 @@
+<div style="display: none;" id="HostModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="HostModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="HostModalLabel">Add host</h3>
+  </div>
+  <div class="modal-body">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab1" data-toggle="tab">TCP Connection</a></li>
+        <li><a href="#tab2" data-toggle="tab">SSH Connection</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1">
+          <form accept-charset="UTF-8" class="form-horizontal" method="post">
+            {% csrf_token %}
+            <input name="connection_type" id="connection_type" value="tcp" type="hidden">
+            <div class="control-group">
+              <label class="control-label" for="name">Hostname</label>
+              <div class="controls">
+                <input id="name" name="name" placeholder="Hostname" value="" type="text">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="ip">IP / Domain</label>
+              <div class="controls">
+                <input id="ip" name="ip" placeholder="IP / Domain" value="" type="text">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="login">Login</label>
+              <div class="controls">
+                <input id="login" name="login" placeholder="Login" value="" type="text" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="password1">Password</label>
+              <div class="controls">
+                <input id="password1" name="password1" placeholder="Password" type="password" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="password2">Confirm Password</label>
+              <div class="controls">
+                <input id="password2" name="password2" placeholder="Confirm Password" type="password" />
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tab-pane" id="tab2">
+          <form accept-charset="UTF-8" class="form-horizontal" method="post" name="create_ssh">
+            {% csrf_token %}
+            <input name="connection_type" id="connection_type" value="ssh" type="hidden">
+            <div class="control-group">
+              <label class="control-label" for="name">Hostname</label>
+              <div class="controls">
+                <input id="name" name="name" placeholder="Hostname" value="" type="text">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="ip">IP / Domain</label>
+              <div class="controls">
+                <input id="ip" name="ip" placeholder="IP / Domain" value="" type="text">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="login">Login</label>
+              <div class="controls">
+                <input id="login" name="login" placeholder="Login" value="root" type="text" />
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="port">SSH port</label>
+              <div class="controls">
+                <input id="port" name="port" placeholder="SSH port" value="22" type="text" />
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

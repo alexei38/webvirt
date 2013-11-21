@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Hosts" %}{% endblock %}
+{% block content %}
+<div class="row">
+   {% include "left_menu.html" %}
+    <div class="span9">
+      {% include "error.html" %}
+      <div class="page-header">
+        <h1>Machines</h1>
+      </div>
+    </div>
+</div>
+
+{% endblock %}
