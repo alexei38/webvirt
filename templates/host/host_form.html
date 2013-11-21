@@ -6,30 +6,30 @@
   <div class="modal-body">
     <div class="tabbable">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">TCP Connection</a></li>
-        <li><a href="#tab2" data-toggle="tab">SSH Connection</a></li>
+        <li class="{% if host.type == 'tcp' or host.type == None %}active{% endif %}"><a href="#tab1" data-toggle="tab">TCP Connection</a></li>
+        <li class="{% if host.type == 'ssh' %}active{% endif %}"><a href="#tab2" data-toggle="tab">SSH Connection</a></li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane active" id="tab1">
+        <div class="tab-pane {% if host.type == 'tcp' or host.type == None %}active{% endif %}" id="tab1">
           <form accept-charset="UTF-8" class="form-horizontal" method="post">
             {% csrf_token %}
             <input name="connection_type" id="connection_type" value="tcp" type="hidden">
             <div class="control-group">
               <label class="control-label" for="name">Hostname</label>
               <div class="controls">
-                <input id="name" name="name" placeholder="Hostname" value="" type="text">
+                <input id="name" name="name" placeholder="Hostname" value="{{ host.name }}" type="text">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="ip">IP / Domain</label>
               <div class="controls">
-                <input id="ip" name="ip" placeholder="IP / Domain" value="" type="text">
+                <input id="ip" name="ip" placeholder="IP / Domain" value="{{ host.ip }}" type="text">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="login">Login</label>
               <div class="controls">
-                <input id="login" name="login" placeholder="Login" value="" type="text" />
+                <input id="login" name="login" placeholder="Login" value="{{ host.login }}" type="text" />
               </div>
             </div>
             <div class="control-group">
@@ -51,32 +51,32 @@
           </form>
         </div>
 
-        <div class="tab-pane" id="tab2">
+        <div class="tab-pane {% if host.type == 'ssh' %}active{% endif %}" id="tab2">
           <form accept-charset="UTF-8" class="form-horizontal" method="post" name="create_ssh">
             {% csrf_token %}
             <input name="connection_type" id="connection_type" value="ssh" type="hidden">
             <div class="control-group">
               <label class="control-label" for="name">Hostname</label>
               <div class="controls">
-                <input id="name" name="name" placeholder="Hostname" value="" type="text">
+                <input id="name" name="name" placeholder="Hostname" value="{{ host.name }}" type="text">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="ip">IP / Domain</label>
               <div class="controls">
-                <input id="ip" name="ip" placeholder="IP / Domain" value="" type="text">
+                <input id="ip" name="ip" placeholder="IP / Domain" value="{{ host.ip }}" type="text">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="login">Login</label>
               <div class="controls">
-                <input id="login" name="login" placeholder="Login" value="root" type="text" />
+                <input id="login" name="login" placeholder="Login" value="{{ host.login }}" type="text" />
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="port">SSH port</label>
               <div class="controls">
-                <input id="port" name="port" placeholder="SSH port" value="22" type="text" />
+                <input id="port" name="port" placeholder="SSH port" value="{{ host.port }}" type="text" />
               </div>
             </div>
             <div class="modal-footer">
