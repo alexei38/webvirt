@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 import string
 from xml.etree import ElementTree
+import socket
 
 class ConnServer(object):
     def __init__(self, host):
@@ -15,12 +16,21 @@ class ConnServer(object):
 
         """
         self.login = host.login
-        self.host = host.hostname
+        self.host = host.ip
         self.passwd = host.password
         self.type = host.type
         self.port = host.port
 
+        socket_host = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket_host.settimeout(1)
         if self.type == 'tcp':
+            try:
+                socket_host.connect((self.host, 16509))
+                socket_host.close()
+            except:
+                self.conn = None
+                return 1
+
             def creds(credentials, user_data):
                 for credential in credentials:
                     if credential[0] == libvirt.VIR_CRED_AUTHNAME:
@@ -38,8 +48,27 @@ class ConnServer(object):
             uri = 'qemu+tcp://%s/system' % self.host
             self.conn = libvirt.openAuth(uri, auth, 0)
         if self.type == 'ssh':
+            try:
+                socket_host.connect((self.host, self.port))
+                socket_host.close()
+            except:
+                self.conn = None
+                return 1
             uri = 'qemu+ssh://%s@%s:%s/system' % (self.login, self.host, self.port)
             self.conn = libvirt.open(uri)
+
+
+    def lookupVM(self, vname):
+        """
+
+        Return VM object.
+
+        """
+        try:
+            dom = self.conn.lookupByName(vname)
+        except:
+            dom = None
+        return dom
 
     def vds_get_node(self):
         """
@@ -61,20 +90,16 @@ class ConnServer(object):
     def node_get_info(self):
         """
 
-        Function return host server information: hostname, cpu, memory, ...
+        Function return host server information: hostname, arch, memory, cpu, uri
 
         """
         info = []
+        getInfo = self.conn.getInfo()
         info.append(self.conn.getHostname())
-        info.append(self.conn.getInfo()[0])
-        info.append(self.conn.getInfo()[2])
-        try:
-            info.append(get_xml_path(self.conn.getSysinfo(0),
-                                     "/sysinfo/processor/entry[6]"))
-        except:
-            info.append('Unknown')
+        info.append(getInfo[0])
+        info.append(getInfo[1])
+        info.append(getInfo[2])
         info.append(self.conn.getURI())
-        info.append(self.conn.getLibVersion())
         return info
 
     def memory_get_usage(self):
@@ -91,11 +116,12 @@ class ConnServer(object):
                        get_freemem.values()[3]) * 1024
             percent = (freemem * 100) / allmem
             percent = 100 - percent
+            percent = str(percent) + '%'
             memusage = (allmem - freemem)
         else:
             memusage = None
             percent = None
-        return allmem, memusage, percent
+        return {"allmem":allmem, "memusage":memusage, "percent":percent}
 
     def cpu_get_usage(self):
         """

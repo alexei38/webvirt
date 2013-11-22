@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from host.models import Host
 from host.forms import HostAddTcpForm, HostAddSshForm, HostEditTcpForm, HostEditSshForm
 from django.core.urlresolvers import reverse
 from webvirt.connserver import ConnServer
+from django.utils import simplejson
 
 @login_required
 def index(request):
@@ -14,7 +15,8 @@ def index(request):
     #messages.error(request, 'Doh! Something went wrong.')
     #messages.warning(request, 'Uh-oh. Your account expires in 3 days.')
     form = None
-    hosts = None
+    hosts = []
+    host_list = []
     if request.method == 'POST':
         if request.POST['connection_type'] == 'tcp':
             form = HostAddTcpForm(request.POST)
@@ -46,7 +48,15 @@ def index(request):
             messages.error(request, 'Not supported connection type')
     else:
         hosts = Host.objects.filter()
-    return render(request, 'host/host_list.html', {'hosts': hosts, 'form': form})
+        for host in hosts:
+            try:
+                conn = ConnServer(host)
+                host_list.append([host.id, host.name, conn, [conn.node_get_info()] ])
+                conn.close()
+            except:
+                conn = None
+                host_list.append([host.id, host.name, None, None])
+    return render(request, 'host/host_list.html', {'hosts': host_list, 'form': form})
 
 @login_required
 def edit(request, host_id):
@@ -82,7 +92,15 @@ def edit(request, host_id):
                 return HttpResponseRedirect(request.get_full_path())
         else:
             messages.error(request, 'Not supported connection type')
-    return render(request, 'host/host_overview.html', {'host': host, 'form': form})
+    else:
+        try:
+            conn = ConnServer(host)
+            host_info = conn.node_get_info()
+            conn.close()
+        except:
+            conn = None
+            host_info = None
+    return render(request, 'host/host_overview.html', {'host': host, 'form': form, 'host_info': host_info})
 
 @login_required
 def delete(request, host_id):
@@ -94,3 +112,17 @@ def delete(request, host_id):
         host.delete()
         messages.success(request, "Host successful removed!")
     return HttpResponseRedirect(reverse('hosts'))
+
+def ajax_memory(request, host_id):
+    try:
+        host = Host.objects.get(id=host_id)
+    except Host.DoesNotExist:
+        raise Http404
+    try:
+        conn = ConnServer(host)
+        memory_usage = conn.memory_get_usage()
+        conn.close()
+    except:
+        memory_usage = {"allmem":0, "memusage":0, "percent":0}
+    data = simplejson.dumps(memory_usage)
+    return HttpResponse(data, mimetype='application/json')

@@ -23,17 +23,41 @@
             <a href="#HostRemoveModal" data-toggle="modal" class="btn btn-danger">Remove</a>
           </p>
         </div>
-
         <div class="span5">
           <p><strong>{{ host.name }}</strong></p>
           <p>
-              <span class='text-success'>Active</span>
+          {% if host_info %}
+              <span class="text-success">{% trans "Active" %}</span>
+          {% else %}
+              <span class="text-error">{% trans "No connected" %}</span>
+          {% endif %}
           </p>
           <p>{{ host.ip }}</p>
+
+          <script type="text/javascript">
+            $(document).ready(function(){
+              function updateBar()
+              {
+                $.getJSON("{% url 'host_get_memory' host.id %}", function(data) {
+                  var bar = $('#memory-usage-bar');
+                  bar.width(data.percent);
+                  $("#memory-usage-text").html(data.percent);
+                  $("#memory-used").html(humanFileSize(data.memusage));
+                  $("#memory-max").html(humanFileSize(data.allmem));
+                });
+              }
+              updateBar();
+              setInterval(function()
+              {
+                updateBar()
+              }, 20000);
+            });
+          </script>
           <div class="progress">
             <div class="bar" id="memory-usage-bar" style="width: 0%;"></div>
             <span id="memory-usage-text">0%</span>
           </div>
+
           <p>{{ host.type }}</p>
         </div>
         {% include "host/host_form.html" with modal_header="Update host" %}
