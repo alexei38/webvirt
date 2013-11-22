@@ -20,7 +20,7 @@
           <p>Type connection</p>
           <p>
             <a href ="#HostModal" data-toggle="modal" class="btn btn-success">Edit</a>
-            <a href="#" class="btn btn-danger" data-confirm="Are you sure?" data-method="delete" rel="nofollow">Remove</a>
+            <a href="#HostRemoveModal" data-toggle="modal" class="btn btn-danger">Remove</a>
           </p>
         </div>
 
@@ -36,7 +36,19 @@
           </div>
           <p>{{ host.type }}</p>
         </div>
-        {% include "host/host_form.html" %}
+        {% include "host/host_form.html" with modal_header="Update host" %}
+        <div style="display: none;" id="HostRemoveModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-body">
+            <form method="post" action="{% url 'host_delete' host.id %}" name="deleteHost">
+              {% csrf_token %}
+              <div style="text-align:center">
+                  <h3>Are you sure?</h3>
+                  <button class="btn" data-dismiss="modal">Cancel</button>
+                  <button class="btn btn-danger">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
 </div>

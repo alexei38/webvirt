@@ -1,7 +1,7 @@
 <div style="display: none;" id="HostModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="HostModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="HostModalLabel">Add host</h3>
+    <h3 id="HostModalLabel">{{ modal_header }}</h3>
   </div>
   <div class="modal-body">
     <div class="tabbable">
@@ -17,7 +17,12 @@
             <div class="control-group">
               <label class="control-label" for="name">Hostname</label>
               <div class="controls">
-                <input id="name" name="name" placeholder="Hostname" value="{{ host.name }}" type="text">
+                {% if host.name %}
+                  <b>{{ host.name }}</b>
+                  <input id="name" name="name" value="{{ host.name }}" type="hidden">
+                {% else %}
+                  <input id="name" name="name" placeholder="Hostname" value="" type="text">
+                {% endif %}
               </div>
             </div>
             <div class="control-group">
@@ -58,7 +63,12 @@
             <div class="control-group">
               <label class="control-label" for="name">Hostname</label>
               <div class="controls">
-                <input id="name" name="name" placeholder="Hostname" value="{{ host.name }}" type="text">
+                {% if host.name %}
+                    <b>{{ host.name }}</b>
+                    <input id="name" name="name" value="{{ host.name }}" type="hidden">
+                {% else %}
+                    <input id="name" name="name" placeholder="Hostname" value="" type="text">
+                {% endif %}
               </div>
             </div>
             <div class="control-group">
