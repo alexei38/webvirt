@@ -1,52 +1,42 @@
-<div class="span3">
-      <div class="bs-sidebar hidden-print affix" role="complementary">
-
-        <ul class="nav bs-sidenav">
-          <li>
-            <a href="#"><span class="icon icon-wrench"></span> <strong>Infrastruture</strong></a>
-            <ul class="nav">
-              <li>
-                <a href="{% url 'dashboard' %}">
-                  <span class='icon-info-sign'></span> Dashboard
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'machines' %}">
-                  <span class='icon-list'></span> Machines
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'hosts' %}">
-                  <span class='icon-globe'></span> Hosts
-                </a>
-              </li>
-              <li>
-                <a href="{% url 'pools' %}">
-                  <span class='icon-hdd'></span> Pools
-                </a>
-              </li>
-            </ul>
-
-            <a href="#"><span class="icon icon-wrench"></span> <strong>Admin</strong></a>
-            <ul class="nav">
-              <li>
-                <a href="#">
-                  <span class='icon-user'></span> Users
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <span class='icon-align-right'></span> Roles
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <span class='icon-globe'></span> Permissions
-                </a>
-              </li>
-            </ul>
-
-          </li>
-        </ul>
+      <div class="sidebar">
+        <div class="nav-collapse sidebar-nav">
+          <ul class="nav nav-tabs nav-stacked main-menu">
+            <li class="{% ifequal current_view 'dashboard' %}active{% endifequal %}">
+              <a href="{% url 'dashboard' %}">
+                <i class='icon-info-sign icon-white'></i>
+                <span class="hidden-tablet"> Dashboard</span>
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'machines' %}active{% endifequal %}">
+              <a href="{% url 'machines' %}">
+                <i class='icon-list icon-white'></i> Machines
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'hosts' %}active{% endifequal %}">
+              <a href="{% url 'hosts' %}">
+                <i class='icon-globe icon-white'></i> Hosts
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'pools' %}active{% endifequal %}">
+              <a href="{% url 'pools' %}">
+                <i class='icon-hdd icon-white'></i> Pools
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'account' %}active{% endifequal %}">
+              <a href="#">
+                <i class='icon-user icon-white'></i> Users
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'roles' %}active{% endifequal %}">
+              <a href="#">
+                <i class='icon-align-right icon-white'></i> Roles
+              </a>
+            </li>
+            <li class="{% ifequal current_view 'permission' %}active{% endifequal %}">
+              <a href="#">
+                <i class='icon-globe icon-white'></i> Permissions
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>

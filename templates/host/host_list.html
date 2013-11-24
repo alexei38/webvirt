@@ -2,9 +2,10 @@
 {% load i18n %}
 {% block title %}{% trans "Hosts" %}{% endblock %}
 {% block content %}
-<div class="row">
-   {% include "left_menu.html" %}
-    <div class="span9">
+
+{% include "left_menu.html" %}
+<div class="row-fluid">
+    <div class="span10 offset2 content">
       {% include "error.html" %}
       {% if form.host_ip.errors %}
           <div class="alert alert-danger">
@@ -46,6 +47,7 @@
                 {% endif %}
               </tr>
               {% endfor %}
+
           </tbody>
         </table>
         {% else %}
@@ -54,8 +56,7 @@
           </div>
         {% endif %}
         <a data-toggle="modal" href="#HostModal" class="btn btn-success">Add host</a>
-        {% include "host/host_form.html" with modal_header="Add host" %}
     </div>
+    {% include "host/host_form.html" with modal_header="Add host" %}
 </div>
-
 {% endblock %}

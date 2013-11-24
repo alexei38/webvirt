@@ -7,4 +7,4 @@ def index(request):
     #messages.info(request, 'Yo! There are new comments on your photo!')
     #messages.error(request, 'Doh! Something went wrong.')
     #messages.warning(request, 'Uh-oh. Your account expires in 3 days.')
-	return render(request, 'machine.html')
+	return render(request, 'machine.html', {'current_view': 'machines'})
