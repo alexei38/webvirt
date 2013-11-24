@@ -56,7 +56,7 @@ def index(request):
             except:
                 conn = None
                 host_list.append([host.id, host.name, None, None])
-    return render(request, 'host/host_list.html', {'current_view': 'hosts', 'hosts': host_list, 'form': form})
+    return render(request, 'host/host_list.html', {'current_url': ['hosts'], 'hosts': host_list, 'form': form})
 
 @login_required
 def edit(request, host_id):
@@ -100,7 +100,7 @@ def edit(request, host_id):
         except:
             conn = None
             host_info = None
-    return render(request, 'host/host_overview.html', {'current_view': 'hosts', 'host': host, 'form': form, 'host_info': host_info})
+    return render(request, 'host/host_overview.html', {'current_url': ['hosts'], 'host': host, 'form': form, 'host_info': host_info})
 
 @login_required
 def delete(request, host_id):

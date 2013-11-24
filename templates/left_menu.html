@@ -1,38 +1,38 @@
       <div class="sidebar">
         <div class="nav-collapse sidebar-nav">
           <ul class="nav nav-tabs nav-stacked main-menu">
-            <li class="{% ifequal current_view 'dashboard' %}active{% endifequal %}">
+            <li class="{% if 'dashboard' in current_url %}active{% endif %}">
               <a href="{% url 'dashboard' %}">
                 <i class='icon-info-sign icon-white'></i>
                 <span class="hidden-tablet"> Dashboard</span>
               </a>
             </li>
-            <li class="{% ifequal current_view 'machines' %}active{% endifequal %}">
+            <li class="{% if 'machines' in current_url %}active{% endif %}">
               <a href="{% url 'machines' %}">
                 <i class='icon-list icon-white'></i> Machines
               </a>
             </li>
-            <li class="{% ifequal current_view 'hosts' %}active{% endifequal %}">
+            <li class="{% if 'hosts' in current_url %}active{% endif %}">
               <a href="{% url 'hosts' %}">
                 <i class='icon-globe icon-white'></i> Hosts
               </a>
             </li>
-            <li class="{% ifequal current_view 'pools' %}active{% endifequal %}">
+            <li class="{% if 'pools' in current_url %}active{% endif %}">
               <a href="{% url 'pools' %}">
                 <i class='icon-hdd icon-white'></i> Pools
               </a>
             </li>
-            <li class="{% ifequal current_view 'account' %}active{% endifequal %}">
+            <li class="{% if 'account' in current_url %}active{% endif %}">
               <a href="#">
                 <i class='icon-user icon-white'></i> Users
               </a>
             </li>
-            <li class="{% ifequal current_view 'roles' %}active{% endifequal %}">
+            <li class="{% if 'roles' in current_url %}active{% endif %}">
               <a href="#">
                 <i class='icon-align-right icon-white'></i> Roles
               </a>
             </li>
-            <li class="{% ifequal current_view 'permission' %}active{% endifequal %}">
+            <li class="{% if  'permission' in current_url %}active{% endif %}">
               <a href="#">
                 <i class='icon-globe icon-white'></i> Permissions
               </a>
