@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load guardian_tags %}
+{% block title %}{% trans "VM List" %}{% endblock %}
+{% block content %}
+<div class="row-fluid">
+  <div class="span10 outer">
+    <div class="box">
+      <header>
+        <div class="icons"><i class="icon-globe"></i></div>
+        <h4>Machines</h4>
+      </header>
+      <div class="body">
+        {% include "error.html" %}
+        <a href="/machines/add/" class="btn btn-success">Add VM</a>
+        <table class="table table-striped" >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>IP</th>
+              <th>Host</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for machine in machines %}
+              {% get_obj_perms user for machine as "machine_perms" %}
+              <tr>
+                <td><a href={% if "change_machine" in machine_perms %}"{% url 'machines_edit' machine.id %}"{% else %}#{% endif %}>{{ machine.name }}</a></td>
+                <td>
+                  <span class="text-success">Active</span>
+                </td>
+                <td>{{ machine.ip }}</td>
+                <td><a href="#">192.168.211.1</a></td>
+                <td>
+                  <a href="#" class="btn btn-primary"><span class="fa fa-play"></span></a>
+                  <a href="#" class="btn btn-warning"><span class="fa fa-power-off"></span></a>
+                  <a href="#" class="btn btn-danger"><span class="fa fa-stop"></span></a>
+                  {% if "change_machine" in machine_perms %}
+                    <a href="#" class="btn btn-info"><span class="fa fa-edit"></span></a>
+                  {% endif %}
+                    <a href="#" class="btn btn-success"><span class="fa fa-eye"></span></a>
+                  {% if "delete_machine" in machine_perms %}
+                    <a href="#" class="btn btn-danger"><span class="fa fa-times"></span></a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

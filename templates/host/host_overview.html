@@ -2,63 +2,69 @@
 {% load i18n %}
 {% block title %}{% trans "Hosts" %}{% endblock %}
 {% block content %}
-{% include "left_menu.html" %}
+
 <div class="row-fluid">
-    <div class="span5 offset2 content">
+  <div class="span10 outer">
+    <div class="box">
+      <header>
+        <div class="icons"><i class="icon-globe"></i></div>
+        <h4>Host</h4>
+      </header>
+      <div class="body">
       {% include "error.html" %}
-      <div class="page-header">
-        <h1>Host</h1>
-      </div>
-      <div class="row">
-        <div class="span4">
-          <p>Hostname</p>
-          <p>Status</p>
-          <p>Address</p>
-          <p style="height:30px">
-          Memory (<span id="memory-used">0</span> / <span id="memory-max">0</span>)
-          </p>
-          <p>Type connection</p>
-          <p>
-            <a href ="#HostModal" data-toggle="modal" class="btn btn-success">Edit</a>
-            <a href="#HostRemoveModal" data-toggle="modal" class="btn btn-danger">Remove</a>
-          </p>
-        </div>
-        <div class="span5">
-          <p><strong>{{ host.name }}</strong></p>
-          <p>
-          {% if host_info %}
-              <span class="text-success">{% trans "Active" %}</span>
-          {% else %}
-              <span class="text-error">{% trans "No connected" %}</span>
-          {% endif %}
-          </p>
-          <p>{{ host.ip }}</p>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="span4">
+              <p>Hostname</p>
+              <p>Status</p>
+              <p>Address</p>
+              <p style="height:30px">
+              Memory (<span id="memory-used">0</span> / <span id="memory-max">0</span>)
+              </p>
+              <p>Type connection</p>
+              <p>
+                <a href="#HostModal" data-toggle="modal" class="btn btn-success">Edit</a>
+                <a href="#HostRemoveModal" data-toggle="modal" class="btn btn-danger">Remove</a>
+              </p>
+            </div>
+            <div class="span5">
+              <p><strong>{{ host.name }}</strong></p>
+              <p>
+              {% if host_info %}
+                  <span class="text-success">{% trans "Active" %}</span>
+              {% else %}
+                  <span class="text-error">{% trans "No connected" %}</span>
+              {% endif %}
+              </p>
+              <p>{{ host.ip }}</p>
 
-          <script type="text/javascript">
-            $(document).ready(function(){
-              function updateBar()
-              {
-                $.getJSON("{% url 'host_get_memory' host.id %}", function(data) {
-                  var bar = $('#memory-usage-bar');
-                  bar.width(data.percent);
-                  $("#memory-usage-text").html(data.percent);
-                  $("#memory-used").html(humanFileSize(data.memusage));
-                  $("#memory-max").html(humanFileSize(data.allmem));
+              <script type="text/javascript">
+                $(document).ready(function(){
+                  function updateBar()
+                  {
+                    $.getJSON("{% url 'host_get_memory' host.id %}", function(data) {
+                      var bar = $('#memory-usage-bar');
+                      bar.width(data.percent);
+                      $("#memory-usage-text").html(data.percent);
+                      $("#memory-used").html(humanFileSize(data.memusage));
+                      $("#memory-max").html(humanFileSize(data.allmem));
+                    });
+                  }
+                  updateBar();
+                  setInterval(function()
+                  {
+                    updateBar()
+                  }, 20000);
                 });
-              }
-              updateBar();
-              setInterval(function()
-              {
-                updateBar()
-              }, 20000);
-            });
-          </script>
-          <div class="progress">
-            <div class="bar" id="memory-usage-bar" style="width: 0%;"></div>
-            <span id="memory-usage-text">0%</span>
-          </div>
+              </script>
+              <div class="progress">
+                <div class="bar" id="memory-usage-bar" style="width: 0%;"></div>
+                <span id="memory-usage-text">0%</span>
+              </div>
 
-          <p>{{ host.type }}</p>
+              <p>{{ host.type }}</p>
+            </div>
+          </div>
         </div>
         {% include "host/host_form.html" with modal_header="Update host" %}
         <div style="display: none;" id="HostRemoveModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -74,6 +80,172 @@
           </div>
         </div>
       </div>
+
+      <div class="tabbable">
+        <div class="tac">
+            <a class="quick-btn" a href="#machine_tab" data-toggle="tab">
+                <i class="fa fa-desktop fa-2x"></i>
+                <span>Machines</span>
+            </a>
+            <a class="quick-btn" a href="#pool_tab" data-toggle="tab">
+                <i class="fa fa-folder-open fa-2x"></i>
+                <span>Pools</span>
+            </a>
+            <a class="quick-btn" a href="#network_tab" data-toggle="tab">
+                <i class="fa fa-globe fa-2x"></i>
+                <span>Network</span>
+            </a>
+        </div>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="machine_tab">
+          <div class="box">
+            <header>
+              <div class="icons"><i class="icon-globe"></i></div>
+              <h4>Machines</h4>
+            </header>
+            <div class="body">
+              <a href="{% url 'machines_add' %}" class="btn btn-success">Add VM</a>
+              <table class="table table-striped" >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>IP</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in "01235678901" %}
+                  <tr>
+                    <td><a href="#">machine1</a></td>
+                    <td>
+                      <span class="text-success">Active</span>
+                    </td>
+                    <td>192.168.211.51</td>
+                    <td>
+                      <a href="#" class="btn btn-primary"><span class="fa fa-play"></span></a>
+                      <a href="#" class="btn btn-warning"><span class="fa fa-power-off"></span></a>
+                      <a href="#" class="btn btn-danger"><span class="fa fa-stop"></span></a>
+                      <a href="#" class="btn btn-info"><span class="fa fa-edit"></span></a>
+                      <a href="#" class="btn btn-success"><span class="fa fa-eye"></span></a>
+                      <a href="#" class="btn btn-danger"><span class="fa fa-times"></span></a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane" id="pool_tab">
+          <div class="box">
+            <header>
+              <div class="icons"><i class="icon-globe"></i></div>
+              <h4>VM Pools</h4>
+            </header>
+            <div class="body">
+              <a href="#" class="btn btn-success">Add pool</a>
+              <table class="table table-striped" >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Path</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in "01235" %}
+                  <tr>
+
+                    <td><a href="#">pool1</a></td>
+                    <td>/dev/vg/lvm</td>
+                    <td>lvm2</td>
+                    <td>
+                      <button class="btn edit"><i class="icon-edit"></i></button>
+                      <button class="btn btn-danger remove" data-toggle="confirmation"><i class="icon-remove"></i></button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="box">
+            <header>
+              <div class="icons"><i class="icon-globe"></i></div>
+              <h4>ISO Pools</h4>
+            </header>
+            <div class="body">
+              <a href="#" class="btn btn-success">Add pool</a>
+              <table class="table table-striped" >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Path</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in "02" %}
+                  <tr>
+
+                    <td><a href="#">pool1</a></td>
+                    <td>/mnt/iso</td>
+                    <td>
+                      <button class="btn edit"><i class="icon-edit"></i></button>
+                      <button class="btn btn-danger remove" data-toggle="confirmation"><i class="icon-remove"></i></button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tab-pane" id="network_tab">
+          <div class="box">
+            <header>
+              <div class="icons"><i class="icon-globe"></i></div>
+              <h4>Network</h4>
+            </header>
+            <div class="body">
+              <a href="#" class="btn btn-success">Add Network</a>
+              <table class="table table-striped" >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Bridge</th>
+                    <th>Dhcp</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in "01235" %}
+                  <tr>
+                    <td><a href="#">net01</a></td>
+                    <td>br01</td>
+                    <td>Yes</td>
+                    <td>
+                      <button class="btn edit"><i class="icon-edit"></i></button>
+                      <button class="btn btn-danger remove" data-toggle="confirmation"><i class="icon-remove"></i></button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>
 {% endblock %}

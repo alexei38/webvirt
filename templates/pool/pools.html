@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load guardian_tags %}
+{% block title %}{% trans "VM List" %}{% endblock %}
+{% block content %}
+<div class="row-fluid">
+  <div class="span10 outer">
+    <div class="box">
+      <header>
+        <div class="icons"><i class="icon-globe"></i></div>
+        <h4>Pools</h4>
+      </header>
+      <div class="body">
+        {% include "error.html" %}
+        <a href="{% url 'pools_add' %}" class="btn btn-success">Add pool</a>
+        <table class="table table-striped" >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>IP</th>
+              <th>Host</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pool in pools %}
+              <tr>
+                <td><a href="#">image</a></td>
+                <td>
+                  <span class="text-success">Active</span>
+                </td>
+                <td>ddd</td>
+                <td><a href="#">192.168.211.1</a></td>
+                <td>
+                  <a href="#" class="btn btn-primary"><span class="fa fa-play"></span></a>
+                  <a href="#" class="btn btn-warning"><span class="fa fa-power-off"></span></a>
+                  <a href="#" class="btn btn-danger"><span class="fa fa-stop"></span></a>
+                  <a href="#" class="btn btn-info"><span class="fa fa-edit"></span></a>
+                  <a href="#" class="btn btn-success"><span class="fa fa-eye"></span></a>
+                  <a href="#" class="btn btn-danger"><span class="fa fa-times"></span></a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

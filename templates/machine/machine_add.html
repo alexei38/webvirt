@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Add VM" %}{% endblock %}
+{% block content %}
+<div class="row-fluid">
+  <div class="span6 outer">
+    <div class="box">
+      <header>
+        <div class="icons"><i class="icon-list"></i></div>
+        <h4>{{title}}</h4>
+      </header>
+      <div class="body">
+        {% include "error.html" %}
+        <div class="tabbable">
+          <div class="tac">
+              <a class="quick-btn" a href="#free_tab" data-toggle="tab">
+                  <i class="fa fa-desktop fa-2x"></i>
+                  <span>New</span>
+              </a>
+              <a class="quick-btn" a href="#template_tab" data-toggle="tab">
+                  <i class="fa fa-file fa-2x"></i>
+                  <span>Template</span>
+              </a>
+              <!-- a class="quick-btn" a href="#clone_tab" data-toggle="tab">
+                  <i class="fa fa-copy fa-2x"></i>
+                  <span>Clone</span>
+              </a -->
+          </div>
+        </div>
+        <hr />
+
+        <div class="tab-content">
+
+          <div class="tab-pane active" id="free_tab">
+            <form class="form-horizontal" method="POST">{% csrf_token %}
+
+              <div class="control-group">
+                <label for="name" class="control-label">Name</label>
+                <div class="controls">
+                    <input class="span10" name="name" id="name"  placeholder="VM Name" type="text" value="{{ machine.name }}" />
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="arch" class="control-label">Arch</label>
+                <div class="controls">
+                  <select class="span10" name="arch">
+                    <option>i386</option>
+                    <option>x86_64</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="vcpu" class="control-label">Cpu</label>
+                <div class="controls">
+                    <input class="span10" name="vcpu"  id="vcpu" placeholder="VM Cpu" type="text" value="{{ machine.vcpu }}" />
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="vmem" class="control-label">Mem</label>
+                <div class="controls">
+                    <input class="span10" name="vmem"  id="vmem" placeholder="VM Mem" type="text" value="{{ machine.vmem }}" />
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="ostype" class="control-label">OS Type</label>
+                <div class="controls">
+                    <select class="span10" name="ostype">
+                      <option>Windows</option>
+                      <option>Linux</option>
+                    </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="host" class="control-label">Host</label>
+                <div class="controls">
+                    <select class="span10" name="host" id="host">
+                      {% for host in hosts %}
+                         <option {% if host.id == machine.host.id %} selected="selected" {% endif %} value="{{ host.id }}">{{ host.name }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="image" class="control-label">Image</label>
+                <div class="controls">
+                    <select class="span10" name="image" id="image">
+                      {% for image in images %}
+                        <option {% if image.id == machine.image.id %} selected="selected" {% endif %} value="{{ image.id }}">{{ image.name }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="virtio" class="control-label">Virtio</label>
+                <div class="controls">
+                    <input class="span10" name="virtio" id="virtio" type="checkbox" {% if machine.virtio %}checked{% endif %} />
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="description" class="control-label">Description</label>
+                <div class="controls">
+                    <textarea class="span10" name="description" id="description">{{ machine.description }}</textarea>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="controls">
+                  <button class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="tab-pane" id="template_tab">
+            <form class="form-horizontal" method="POST">{% csrf_token %}
+              <div class="control-group">
+                <label for="template" class="control-label">Template</label>
+                <div class="controls">
+                  <select class="" name="template" id="template">
+                    {% for image in images %}
+                      <option {% if image.id == machine.image.id %} selected="selected" {% endif %} value="{{ image.id }}">{{ image.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="controls">
+                  <button class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        
+          <!-- div class="tab-pane" id="clone_tab">
+            <form class="form-horizontal" method="POST">{% csrf_token %}
+              <div class="control-group">
+                <label for="clone" class="control-label">From VM</label>
+                <div class="controls">
+                  <select class="" name="clone" id="clone">
+                    {% for image in images %}
+                      <option {% if image.id == machine.image.id %} selected="selected" {% endif %} value="{{ image.id }}">{{ image.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="controls">
+                  <button class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </form>
+          </div-->
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

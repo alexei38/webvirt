@@ -1,42 +1,21 @@
-      <div class="sidebar">
-        <div class="nav-collapse sidebar-nav">
-          <ul class="nav nav-tabs nav-stacked main-menu">
-            <li class="{% if 'dashboard' in current_url %}active{% endif %}">
-              <a href="{% url 'dashboard' %}">
-                <i class='icon-info-sign icon-white'></i>
-                <span class="hidden-tablet"> Dashboard</span>
-              </a>
-            </li>
+      <div id="left">
+          <ul id="menu" class="unstyled accordion collapse in">
             <li class="{% if 'machines' in current_url %}active{% endif %}">
               <a href="{% url 'machines' %}">
-                <i class='icon-list icon-white'></i> Machines
+                <i class='fa fa-desktop'></i> Machines
               </a>
             </li>
+            {% if user.is_superuser %}
             <li class="{% if 'hosts' in current_url %}active{% endif %}">
               <a href="{% url 'hosts' %}">
-                <i class='icon-globe icon-white'></i> Hosts
+                <i class='fa fa-cloud'></i> Hosts
               </a>
             </li>
             <li class="{% if 'pools' in current_url %}active{% endif %}">
               <a href="{% url 'pools' %}">
-                <i class='icon-hdd icon-white'></i> Pools
+                <i class='fa fa-folder-open'></i> Pools
               </a>
             </li>
-            <li class="{% if 'account' in current_url %}active{% endif %}">
-              <a href="#">
-                <i class='icon-user icon-white'></i> Users
-              </a>
-            </li>
-            <li class="{% if 'roles' in current_url %}active{% endif %}">
-              <a href="#">
-                <i class='icon-align-right icon-white'></i> Roles
-              </a>
-            </li>
-            <li class="{% if  'permission' in current_url %}active{% endif %}">
-              <a href="#">
-                <i class='icon-globe icon-white'></i> Permissions
-              </a>
-            </li>
+            {% endif %}
           </ul>
         </div>
-      </div>

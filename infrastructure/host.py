@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from host.models import Host
-from host.forms import HostAddTcpForm, HostAddSshForm, HostEditTcpForm, HostEditSshForm
+from infrastructure.models import Host
+from infrastructure.forms import HostAddTcpForm, HostAddSshForm, HostEditTcpForm, HostEditSshForm
 from django.core.urlresolvers import reverse
 from webvirt.connserver import ConnServer
 from django.utils import simplejson
@@ -56,11 +56,13 @@ def index(request):
             except:
                 conn = None
                 host_list.append([host.id, host.name, None, None])
-    return render(request, 'host/host_list.html', {'current_url': ['hosts'], 'hosts': host_list, 'form': form})
+    return render(request, 'host/hosts.html', {'current_url': ['hosts'], 'hosts': host_list, 'form': form})
 
 @login_required
 def edit(request, host_id):
+    pools = {}
     form = None
+    host_info = None
     try:
         host = Host.objects.get(id=host_id)
     except Host.DoesNotExist:
@@ -96,11 +98,11 @@ def edit(request, host_id):
         try:
             conn = ConnServer(host)
             host_info = conn.node_get_info()
+            pools = conn.storages_get_node()
             conn.close()
         except:
             conn = None
-            host_info = None
-    return render(request, 'host/host_overview.html', {'current_url': ['hosts'], 'host': host, 'form': form, 'host_info': host_info})
+    return render(request, 'host/host_overview.html', {'current_url': ['hosts'], 'host': host, 'pools' : pools, 'form': form, 'host_info': host_info})
 
 @login_required
 def delete(request, host_id):

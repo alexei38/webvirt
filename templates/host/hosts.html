@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Hosts" %}{% endblock %}
+{% block content %}
+
+<div class="row-fluid">
+    <div class="span10 outer">
+      <div class="box">
+        <header>
+          <div class="icons"><i class="icon-globe"></i></div>
+          <h4>Hosts</h4>
+        </header>
+        <div class="body">
+          {% include "error.html" %}
+          {% if form.host_ip.errors %}
+            <div class="alert alert-danger">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              {% for error in form.host_ip.errors  %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          <a data-toggle="modal" href="#HostModal" class="btn btn-success">Add host</a>
+          {% if hosts %}
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Vcpu</th>
+                  <th>Memory</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for host_id, host_name, host_status, info in hosts %}
+                  <tr>
+                    <td><a href="{% url 'host_edit' host_id %}">{{ host_name }}</a></td>
+                    {% if host_status %}
+                    <td>
+                      <span class="text-success">{% trans 'Active' %}</span>
+                    </td>
+                    <td>{{ info.0.3 }}</td>
+                    <td>{{ info.0.2 }}</td>
+                    {% else %}
+                    <td>
+                      <span class="text-error">{% trans 'No connected' %}</span>
+                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>
+                      <button class="btn"><i class="icon-edit"></i></button>
+                      <button class="btn btn-danger"><i class="icon-remove"></i></button>
+                    </td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+
+              </tbody>
+            </table>
+          {% else %}
+              <div class="well" style="text-align:center">
+                <h3>No host connection</h3>
+              </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% include "host/host_form.html" with modal_header="Add host" %}
+</div>
+{% endblock %}

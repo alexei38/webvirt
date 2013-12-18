@@ -22,7 +22,7 @@ class ConnServer(object):
         self.port = host.port
 
         socket_host = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket_host.settimeout(1)
+        socket_host.settimeout(0.4) #0.4 seconds
         if self.type == 'tcp':
             try:
                 socket_host.connect((self.host, 16509))
@@ -86,6 +86,22 @@ class ConnServer(object):
             vname[dom.name()] = dom.info()[0]
         return vname
 
+    def storages_get_node(self):
+        """
+
+        Function return host server storages.
+
+        """
+        storages = {}
+        for storage in self.conn.listStoragePools():
+            stg = self.conn.storagePoolLookupByName(storage)
+            status = stg.isActive()
+            storages[storage] = status
+        for storage in self.conn.listDefinedStoragePools():
+            stg = self.storagePool(storage)
+            status = stg.isActive()
+            storages[storage] = status
+        return storages
 
     def node_get_info(self):
         """

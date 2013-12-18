@@ -1,8 +1,85 @@
 from django import forms
-from host.models import Host
+from infrastructure.models import *
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 import re
+
+class MachineAddForm(forms.Form):
+    name = forms.CharField(error_messages={'required': _('No Name has been entered')},
+                           max_length=40)
+    arch = forms.CharField(error_messages={'required': _('No arch has been entered')},
+                            max_length=40)
+    vcpu = forms.IntegerField(error_messages={'required': _('No vcpu has been entered'), 'invalid':_('Enter CPU number') })
+    vmem = forms.IntegerField(error_messages={'required': _('No vmem has been entered'), 'invalid':_('Enter MEM number') })
+    virtio = forms.BooleanField(required=False, initial=True)
+    ostype = forms.CharField(error_messages={'required': _('No ostype has been entered')},
+                            max_length=40)
+    image = forms.ModelMultipleChoiceField(queryset=Image.objects.all())
+    host = forms.ModelMultipleChoiceField(queryset=Host.objects.all())
+    description = forms.CharField(required=False)
+
+    def clean(self):
+        return self.cleaned_data
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if Machine.objects.filter(name=name).count() > 0:
+            raise forms.ValidationError('This display name is already in use.')
+        return name
+
+    def clean_host(self):
+        host_id = self.cleaned_data['host']
+        try:
+            host = Host.objects.get(id=host_id)
+        except Host.DoesNotExist:
+            raise forms.ValidationError(_('Host not found'))
+        return host
+
+    def clean_image(self):
+        image_id = self.cleaned_data['image']
+        try:
+            image = Image.objects.get(id=image_id)
+        except Image.DoesNotExist:
+            raise forms.ValidationError(_('Image not found'))
+        return image
+
+class MachineEditForm(forms.Form):
+    name = forms.CharField(error_messages={'required': _('No Name has been entered')},
+                           max_length=40)
+    arch = forms.CharField(error_messages={'required': _('No arch has been entered')},
+                            max_length=40)
+    vcpu = forms.IntegerField(error_messages={'required': _('No vcpu has been entered'), 'invalid':_('Enter CPU number') })
+    vmem = forms.IntegerField(error_messages={'required': _('No vmem has been entered'), 'invalid':_('Enter MEM number') })
+    virtio = forms.BooleanField(required=False, initial=True)
+    ostype = forms.CharField(error_messages={'required': _('No ostype has been entered')},
+                            max_length=40)
+    image = forms.ModelMultipleChoiceField(queryset=Image.objects.all())
+    host = forms.ModelMultipleChoiceField(queryset=Host.objects.all())
+    description = forms.CharField(required=False)
+
+    def clean(self):
+        name = self.cleaned_data.get('name')
+        id = Machine.objects.get(name=name).id
+        other_vm = Machine.objects.filter(~Q(id=id), name = name)
+        if len(other_vm) > 0:
+            raise forms.ValidationError(_("This Vm name is already used"))
+        return self.cleaned_data
+
+    def clean_host(self):
+        host_id = self.cleaned_data['host']
+        try:
+            host = Host.objects.get(id=host_id)
+        except Host.DoesNotExist:
+            raise forms.ValidationError(_('Host not found'))
+        return host
+
+    def clean_image(self):
+        image_id = self.cleaned_data['image']
+        try:
+            image = Image.objects.get(id=image_id)
+        except Image.DoesNotExist:
+            raise forms.ValidationError(_('Image not found'))
+        return image
 
 class HostAddTcpForm(forms.Form):
     name = forms.CharField(error_messages={'required': _('No hostname has been entered')},

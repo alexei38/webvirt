@@ -26,6 +26,8 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ANONYMOUS_USER_ID = -1
+
 AUTH_LDAP_SERVER_URI = 'ldap://ldap.naumen.ru'
 AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=users,dc=naumen,dc=ru'
 AUTH_LDAP_USER_ATTR_MAP = {
@@ -47,7 +49,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'host'
+    'infrastructure',
+    'guardian'
 )
 
 MIDDLEWARE_CLASSES = (
